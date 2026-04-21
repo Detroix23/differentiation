@@ -1,0 +1,16 @@
+Metadata-Version: 2.4
+Name: differentiation_detroix23
+Version: 0.1.0
+Summary: Graph differential equation solutions and approximations.
+Author-email: Detroix23 <detroix23@gmail.com>
+License-Expression: CC-BY-4.0
+Project-URL: Repository, https://github.com/Detroix23/
+Classifier: Programming Language :: Python :: 3
+Classifier: Operating System :: OS Independent
+Classifier: Natural Language :: English
+Requires-Python: >=3.14
+Description-Content-Type: text/markdown
+License-File: LICENSE.md
+Requires-Dist: numpy
+Requires-Dist: matplotlib
+Dynamic: license-file

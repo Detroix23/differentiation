@@ -1,0 +1,12 @@
+LICENSE.md
+README.md
+pyproject.toml
+src/differentiation_detroix23/__init__.py
+src/differentiation_detroix23/__main__.py
+src/differentiation_detroix23/definitions.py
+src/differentiation_detroix23/euler.py
+src/differentiation_detroix23.egg-info/PKG-INFO
+src/differentiation_detroix23.egg-info/SOURCES.txt
+src/differentiation_detroix23.egg-info/dependency_links.txt
+src/differentiation_detroix23.egg-info/requires.txt
+src/differentiation_detroix23.egg-info/top_level.txt
