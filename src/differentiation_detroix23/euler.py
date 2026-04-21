@@ -22,6 +22,7 @@ class Euler:
 	u(n+1) = u(n) + d * f(u(n))
 	```
 	"""
+	name: str
 	f: REAL_FUNCTION
 	d: float
 	n: int
@@ -31,11 +32,13 @@ class Euler:
 
 	def __init__(
 		self, 
+		name: str,
 		f: REAL_FUNCTION, 
 		d: float,
 		samples_count: int,
 		u0: float
 	) -> None:
+		self.name = name
 		self.f = f
 		self.d = d
 		self.n = 0
@@ -75,15 +78,12 @@ class Euler:
 		"""
 		Plot using `matplotlib`.
 		"""
-		(figure, axes) = pyplot.subplots()
-		axes.plot(self.x, self.y, color="red", marker="o")
+		(figure, axes) = pyplot.subplots(1, 1)
+		axes.plot(self.x, self.y)
 		
-		axes.set_title(f"Euler method with f, u₀={self.y[0]}, d={self.d}, n={self.n}.")
+		axes.set_title(f"Euler method. `{self.name}` with f, u₀={self.y[0]}, d={self.d}, n={self.n}.")
 		axes.set_xlabel("n")
 		axes.set_ylabel("y")
-
-
-		pyplot.show()
 
 		return
 	

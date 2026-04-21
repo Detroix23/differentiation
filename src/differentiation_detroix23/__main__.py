@@ -3,7 +3,7 @@
 /src/differentiation_detroix23/__main__.py
 """
 
-from differentiation_detroix23.definitions import REAL_FUNCTION
+from differentiation_detroix23.definitions import REAL_FUNCTION, show
 from differentiation_detroix23 import euler
 
 def main() -> None:
@@ -16,11 +16,14 @@ def run_euler1() -> None:
 	"""
 	Run an `Euler` differentiator.
 	"""
-	f: REAL_FUNCTION = lambda x: -1 * x + 2
+	e1 = euler.Euler("1.", lambda x: (1.0 - x) / x, d=0.03, samples_count=1000, u0=0.1)
+	e1.complete()
+	e1.plot()
 
-	e = euler.Euler(f, d=0.01, samples_count=100, u0=1)
-	e.complete()
-	print(e.x)
-	e.plot()
+	e2 = euler.Euler("2.", lambda x: x * (1.0 - x), d=0.01, samples_count=1000, u0=0.3)
+	e2.complete()
+	e2.plot()
+
+	show()
 
 main()
