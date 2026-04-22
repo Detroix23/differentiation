@@ -6,7 +6,7 @@
 import numpy
 from matplotlib import pyplot
 
-from differentiation_detroix23.definitions import REAL, INTEGER, REAL_FUNCTION, REAL_LIST, INTEGER_LIST
+from differentiation_detroix23.definitions import Real, Integer, RealFunction, RealList, IntegerList
 
 class Euler:
 	"""
@@ -23,17 +23,17 @@ class Euler:
 	```
 	"""
 	name: str
-	f: REAL_FUNCTION
+	f: RealFunction
 	d: float
 	n: int
 	samples_count: int
-	x: INTEGER_LIST
-	y: REAL_LIST
+	x: IntegerList
+	y: RealList
 
 	def __init__(
 		self, 
 		name: str,
-		f: REAL_FUNCTION, 
+		f: RealFunction, 
 		d: float,
 		samples_count: int,
 		u0: float
@@ -43,8 +43,8 @@ class Euler:
 		self.d = d
 		self.n = 0
 		self.samples_count = samples_count
-		self.y = numpy.zeros((samples_count,), dtype=REAL)
-		self.x = numpy.zeros((samples_count,), dtype=INTEGER)
+		self.y = numpy.zeros((samples_count,), dtype=Real)
+		self.x = numpy.zeros((samples_count,), dtype=Integer)
 		self.x[0] = 0
 		self.y[0] = u0
 
@@ -64,7 +64,7 @@ class Euler:
 		self.n += 1
 		return sequence_next
 
-	def complete(self) -> tuple[INTEGER_LIST, REAL_LIST]:
+	def complete(self) -> tuple[IntegerList, RealList]:
 		"""
 		Use `step` to reach the `samples_count`.
 		"""
