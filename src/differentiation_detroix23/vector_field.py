@@ -7,15 +7,21 @@ import math
 import numpy
 from matplotlib import pyplot
 
-from differentiation_detroix23.definitions import Real, RealList, RealFunction
+from differentiation_detroix23.definitions import Real, RealList, RealFunction, Real2Function
 
 class VectorField:
 	"""
-	# Draw the flow of a differential equation with a `VectorField`.
+	# Draw the flow of a differential equation with a `VectorField`. 
+
+	Parameters
+	- `name`: `str`, optional identifier,
+	- `a`: `(ℝ×ℝ) → ℝ`, compute the `x` displacement,
+	- `b`: `(ℝ×ℝ) → ℝ`, compute the `y` displacement,
 	"""
 	name: str
-	f: RealFunction
-	attenuation: RealFunction
+	a: Real2Function
+	b: Real2Function
+	attenuation: RealFunction | None
 	sample_position: tuple[float, float]
 	sample_size: tuple[float, float]
 	sample_step: tuple[float, float]
@@ -32,15 +38,17 @@ class VectorField:
 	def __init__(
 		self,
 		name: str,
-		f: RealFunction,
+		a: Real2Function,
+		b: Real2Function,
 		attenuation: RealFunction | None,
 		sample_size: tuple[float, float],
 		sample_position: tuple[float, float],
 		sample_step: tuple[float, float],
 	) -> None:
 		self.name = name
-		self.f = f
-		self.attenuation = attenuation if attenuation is not None else lambda x: x
+		self.a = a
+		self.b = b
+		self.attenuation = attenuation
 		self.sample_size = sample_size
 		self.sample_position = sample_position
 		self.sample_step = sample_step
@@ -69,17 +77,32 @@ class VectorField:
 
 			while i < self.size[0]:
 				index: int = j * self.size[0] + i
+				u: float
 				v: float
 				try:
-					v = (self.attenuation)((self.f)(x))
-					self.v[index] = v
+					u = (self.a)(x, y)
+					v = (self.b)(x, y)
+				
 				except ZeroDivisionError:
-					print(f"(?) vector_field.VectorField.complete() ZeroDivisionError x={x}.")
-					v = float('inf')
+					# print(f"(?) vector_field.VectorField.complete() ZeroDivisionError x={x}.")
+					u = math.inf * x
+					v = math.inf * x
+
+				except Exception as exception:
+					print("(X) vector_field.VectorField.complete() Uncaught exception:")
+					raise exception
+
+				if self.attenuation is not None:
+					length: float = math.sqrt(u * u + v * v)
+					if length != 0:
+						length_attenuated: float = (self.attenuation)(length)
+
+						u = u / length * length_attenuated
+						v = v / length * length_attenuated
 
 				self.x[index] = x
 				self.y[index] = y
-				self.u[index] = self.sample_step[0] / 2.0
+				self.u[index] = u
 				self.v[index] = v
 
 				i += 1
