@@ -1,6 +1,6 @@
 """
 # Differentiation.
-/src/differentiation_detroix23/vector_field.py
+/src/differentiation_detroix23/vectors.py
 """
 
 import math
@@ -19,6 +19,12 @@ class Vector:
 		"""
 		self.x = x
 		self.y = y
+
+	def __str__(self) -> str:
+		return f"({self.x}; {self.y})"
+
+	def __repr__(self) -> str:
+		return f"Vector(x={self.x}, y={self.y})"
 
 	def __mul__(self, other: object) -> Vector:
 		if isinstance(other, float) or isinstance(other, int):

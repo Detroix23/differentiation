@@ -6,7 +6,7 @@
 import math
 
 from differentiation_detroix23.definitions import *
-from differentiation_detroix23 import euler, vector_field
+from differentiation_detroix23 import vectors, euler, vector_field
 
 def main() -> None:
 	"""
@@ -42,9 +42,9 @@ def run_vectors1() -> None:
 		a=lambda x, y: (2.0 - y) * x,
 		b=lambda x, y: y * (x - 2.0),
 		attenuation=sigmoid_logistic,
-		sample_position=(-10.0, -10.0),
-		sample_size=(20.0, 20.0),
-		sample_step=(0.5, 0.5)
+		sample_position=vectors.Vector(-10.0, -10.0),
+		sample_size=vectors.Vector(20.0, 20.0),
+		sample_step=vectors.Vector(0.5, 0.5)
 	)
 	v1.complete()
 	v1.plot()

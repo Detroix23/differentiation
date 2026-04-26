@@ -8,7 +8,7 @@ import numpy
 from matplotlib import pyplot, figure, axes
 
 from differentiation_detroix23.definitions import Real, RealList, RealFunction, Real2Function
-from differentiation_detroix23 import vectors
+from differentiation_detroix23 import vectors, vector_pathing
 
 class VectorField:
 	"""
@@ -23,9 +23,9 @@ class VectorField:
 	a: Real2Function
 	b: Real2Function
 	attenuation: RealFunction | None
-	sample_position: tuple[float, float]
-	sample_size: tuple[float, float]
-	sample_step: tuple[float, float]
+	sample_position: vectors.Vector
+	sample_size: vectors.Vector
+	sample_step: vectors.Vector
 	size: tuple[int, int]
 	x: RealList
 	"""`x` origin of each vector."""
@@ -35,7 +35,7 @@ class VectorField:
 	"""`x` size of each vector."""
 	v: RealList
 	"""`y` size of each vector."""
-	pather: VectorPathing
+	pather: vector_pathing.VectorPathing
 	figures: figure.Figure
 	axes: axes.Axes
 
@@ -45,9 +45,9 @@ class VectorField:
 		a: Real2Function,
 		b: Real2Function,
 		attenuation: RealFunction | None,
-		sample_size: tuple[float, float],
-		sample_position: tuple[float, float],
-		sample_step: tuple[float, float],
+		sample_size: vectors.Vector,
+		sample_position: vectors.Vector,
+		sample_step: vectors.Vector,
 	) -> None:
 		self.name = name
 		self.a = a
@@ -58,8 +58,8 @@ class VectorField:
 		self.sample_step = sample_step
 		
 		self.size = (
-			int(math.ceil(self.sample_size[0] / self.sample_step[0])),
-			int(math.ceil(self.sample_size[1] / self.sample_step[1])),
+			int(math.ceil(self.sample_size.x / self.sample_step.x)),
+			int(math.ceil(self.sample_size.y / self.sample_step.y)),
 		)
 
 		self.x = numpy.zeros((self.size[0] * self.size[1],), dtype=Real)
@@ -67,7 +67,12 @@ class VectorField:
 		self.u = numpy.zeros((self.size[0] * self.size[1],), dtype=Real)
 		self.v = numpy.zeros((self.size[0] * self.size[1],), dtype=Real)
 
-		self.pather = VectorPathing(self, 0.01, vectors.Vector(4.0, 5.0), 1000)
+		self.pather = vector_pathing.VectorPathing(
+			field=self, 
+			step_size=0.01, 
+			start_position=vectors.Vector(4.0, 5.0), 
+			sample_count=1000,
+		)
 		(self.figures, self.axes) = pyplot.subplots()
 
 
@@ -79,10 +84,10 @@ class VectorField:
 		i: int
 		j: int = 0
 		x: float
-		y: float = self.sample_position[1] + j * self.sample_step[1]
+		y: float = self.sample_position.y + j * self.sample_step.y
 		while j < self.size[1]:
 			i = 0
-			x = self.sample_position[0] + i * self.sample_step[0]
+			x = self.sample_position.x + i * self.sample_step.x
 
 			while i < self.size[0]:
 				index: int = j * self.size[0] + i
@@ -110,10 +115,10 @@ class VectorField:
 				self.v[index] = vector.y
 
 				i += 1
-				x = self.sample_position[0] + i * self.sample_step[0]
+				x = self.sample_position.x + i * self.sample_step.x
 
 			j += 1
-			y = self.sample_position[1] + j * self.sample_step[1]
+			y = self.sample_position.y + j * self.sample_step.y
 
 		self.pather.complete()
 
@@ -130,77 +135,7 @@ class VectorField:
 f, position={self.sample_position}, size={self.sample_size}, step={self.sample_step}.""")
 		self.axes.set_xlabel("x")
 		self.axes.set_ylabel("y")
-		self.axes.set_xbound(self.sample_position[0], self.sample_position[0] + self.sample_size[0])
-		self.axes.set_ybound(self.sample_position[1], self.sample_position[1] + self.sample_size[1])
+		self.axes.set_xbound(self.sample_position.x, self.sample_position.x + self.sample_size.x)
+		self.axes.set_ybound(self.sample_position.y, self.sample_position.y + self.sample_size.y)
 
 		return
-
-
-class VectorPathing:
-	"""
-	# `VectorPathing` in a vector field.
-	"""
-	field: VectorField
-	step_size: float
-	position_start: vectors.Vector
-	position: vectors.Vector
-	step_counter: int
-	sample_count: int
-	x: RealList
-	y: RealList
-
-	def __init__(
-		self,
-		field: VectorField, 
-		step_size: float,
-		start_position: vectors.Vector,
-		sample_count: int,
-	) -> None:
-		"""
-		Instantiate a pather `VectorPathing` in a `VectorField`.
-		"""
-		self.field = field
-		self.step_size = step_size
-		self.position_start = start_position.clone()
-		self.position = start_position.clone()
-		self.step_counter = 0
-		self.sample_count = sample_count
-		self.x = numpy.zeros((self.sample_count,), dtype=Real)
-		self.y = numpy.zeros((self.sample_count,), dtype=Real)
-
-	def step(self) -> vectors.Vector:
-		"""
-		Advance the pather, _flowing_ down the `field` with the given `step_size`.
-		"""
-		if self.step_counter > self.sample_count - 1:
-			print(f"(!) vector_field.VectorPathing.step() \
-Reached step limit ({self.step_counter}/ {self.sample_count} - 1)")
-			return self.position
-		
-		slope: vectors.Vector = vectors.Vector(
-			(self.field.a)(self.position.x, self.position.y),
-			(self.field.b)(self.position.x, self.position.y),
-		)
-
-		self.position.add(slope.multiply(self.step_size))
-		self.x[self.step_counter] = self.position.x
-		self.y[self.step_counter] = self.position.y
-		
-		self.step_counter += 1
-
-		return self.position
-
-	def complete(self) -> None:
-		"""
-		Execute `step` to reach `sample_count`.
-		"""
-		while self.step_counter < self.sample_count:
-			self.step()
-
-	def plot(self) -> None:
-		"""
-		Plot `VectorPathing` path to the `field` axes.
-		"""
-		self.field.axes.plot(self.x, self.y, color="blue")
-		self.field.axes.scatter(self.position_start.x, self.position_start.y, c="red")
-		self.field.axes.scatter(self.x[-1], self.y[-1], c="green")
