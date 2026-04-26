@@ -12,7 +12,7 @@ def main() -> None:
 	"""
 	Differentiation main entry point.
 	"""
-	run_euler1()
+	# run_euler1()
 
 	run_vectors1()
 
@@ -39,8 +39,8 @@ def run_vectors1() -> None:
 	print("(?) run_vectors1() Loading `v1`.")
 	v1 = vector_field.VectorField(
 		name="1.", 
-		a=lambda x, y: (1.0 - y) * x + 2.0,
-		b=lambda x, y: y * (x - 1.0) - 2.0,
+		a=lambda x, y: (2.0 - y) * x,
+		b=lambda x, y: y * (x - 2.0),
 		attenuation=sigmoid_logistic,
 		sample_position=(-10.0, -10.0),
 		sample_size=(20.0, 20.0),

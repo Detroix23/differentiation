@@ -4,7 +4,11 @@
 	"python.analysis.inlayHints.functionReturnTypes": true,
 	"python.analysis.generateWithTypeAnnotation": true,
 	"cSpell.words": [
+		"pather",
+		"Pathing",
+		"xbound",
 		"xlabel",
+		"ybound",
 		"ylabel"
 	]
 }
