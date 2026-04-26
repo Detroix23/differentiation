@@ -12,9 +12,11 @@ def main() -> None:
 	"""
 	Differentiation main entry point.
 	"""
-	# run_euler1()
+	run_euler1()
 
 	run_vectors1()
+
+	run_vectors2()
 
 	show()
 
@@ -48,5 +50,22 @@ def run_vectors1() -> None:
 	)
 	v1.complete()
 	v1.plot()
+	del v1
+
+def run_vectors2() -> None:
+	print("(?) run_vectors1() Loading `v2`.")
+	v2 = vector_field.VectorField(
+		name="2.", 
+		a=lambda x, y: y * x,
+		b=lambda x, y: 5.0 * x - 2.0 * y,
+		attenuation=ln1pr,
+		sample_position=vectors.Vector(-10.0, -10.0),
+		sample_size=vectors.Vector(20.0, 20.0),
+		sample_step=vectors.Vector(0.5, 0.5)
+	)
+	v2.complete()
+	v2.plot()
+
+	del v2
 
 main()

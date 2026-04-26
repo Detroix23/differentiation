@@ -7,8 +7,10 @@
 		"pather",
 		"Pathing",
 		"xbound",
+		"xdata",
 		"xlabel",
 		"ybound",
+		"ydata",
 		"ylabel"
 	]
 }

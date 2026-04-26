@@ -4,8 +4,10 @@
 """
 
 import math
+import copy
+
 import numpy
-from matplotlib import pyplot, figure, axes
+from matplotlib import backend_bases, pyplot, figure, axes
 
 from differentiation_detroix23.definitions import Real, RealList, RealFunction, Real2Function
 from differentiation_detroix23 import vectors, vector_pathing
@@ -38,6 +40,7 @@ class VectorField:
 	pather: vector_pathing.VectorPathing
 	figures: figure.Figure
 	axes: axes.Axes
+	connection_mouse_id: int
 
 	def __init__(
 		self,
@@ -73,9 +76,64 @@ class VectorField:
 			start_position=vectors.Vector(4.0, 5.0), 
 			sample_count=1000,
 		)
+
+		# Matplotlib.
 		(self.figures, self.axes) = pyplot.subplots()
+		self.axes.autoscale(False)
+
+		self.connection_mouse_id = self.figures.canvas.mpl_connect('button_press_event', self.on_click)
+
+	def __del__(self) -> None:
+		"""
+		On drop actions.
+		"""
+		self.figures.canvas.mpl_disconnect(self.connection_mouse_id)
+
+	def on_click(self, event: backend_bases.Event) -> None:
+		"""
+		Event action, listened by `pyplot`'s `Figure`. 
+		
+		Use middle mouse button to create a new _pather_ at cursor location.
+		"""
+		position: vectors.Vector | None
+		button: int
+
+		try:
+			button = event.button  # pyright: ignore[reportAttributeAccessIssue]
+			position = vectors.Vector(float(event.xdata), float(event.ydata))  # pyright: ignore[reportAttributeAccessIssue]
+		except:
+			button = 0
+			position = None
+
+		'''
+		print(f"""
+Event:
+x: {type(event.x)} = {event.x}	
+y: {type(event.y)} = {event.y}	
+xdata: {type(event.xdata)} = {event.xdata}	
+ydata: {type(event.ydata)} = {event.ydata}	
+ydata: {type(position_x)} = {position_x}	
+ydata: {type(position_y)} = {position_y}	
+button={event.button}	
+""")
+		'''
+
+		if (
+			position is not None 
+			and position.x is not math.nan 
+			and position.y is not math.nan 
+			and button == 2
+		):
+			print(f"(?) VectorField.on_click() {self.name} new 'pather' to ({position})")
+			self.pather.position_start = position.clone()
+			self.pather.reset()
+			self.pather.complete()
+
+			self.pather.plot()
+			self.figures.show()
 
 
+		return
 
 	def complete(self) -> None:
 		"""
@@ -102,7 +160,7 @@ class VectorField:
 					vector.y = math.inf * y
 
 				except Exception as exception:
-					print("(X) vector_field.VectorField.complete() Uncaught exception:")
+					print(f"(X) vector_field.VectorField.complete() {self.name} uncaught exception:")
 					raise exception
 
 				if self.attenuation is not None and vector.length_squared() != 0:
@@ -120,22 +178,27 @@ class VectorField:
 			j += 1
 			y = self.sample_position.y + j * self.sample_step.y
 
-		self.pather.complete()
-
 		return
 
 	def plot(self) -> None:
 		"""
 		Plot the vector field. Do not `show` automatically the figure.
 		"""
-		self.axes.quiver(self.x, self.y, self.u, self.v)
-		self.pather.plot()
-
 		self.axes.set_title(f"""Vector field. `{self.name}` with: 
 f, position={self.sample_position}, size={self.sample_size}, step={self.sample_step}.""")
 		self.axes.set_xlabel("x")
 		self.axes.set_ylabel("y")
-		self.axes.set_xbound(self.sample_position.x, self.sample_position.x + self.sample_size.x)
-		self.axes.set_ybound(self.sample_position.y, self.sample_position.y + self.sample_size.y)
+		self.set_plot_bound()
+
+		self.axes.quiver(self.x, self.y, self.u, self.v)
+		self.pather.plot()
 
 		return
+
+	def set_plot_bound(self) -> None:
+		"""
+		Set the bound respectively to the `samples` parameters.
+		"""
+		self.axes.set_xbound(self.sample_position.x, self.sample_position.x + self.sample_size.x)
+		self.axes.set_ybound(self.sample_position.y, self.sample_position.y + self.sample_size.y)
+	

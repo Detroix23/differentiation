@@ -4,6 +4,7 @@
 """
 
 import numpy
+from matplotlib import lines
 from typing import TYPE_CHECKING
 
 if TYPE_CHECKING:
@@ -23,6 +24,7 @@ class VectorPathing:
 	- End: 'green' point.
 	"""
 	field: 'vector_field.VectorField'
+	ready: bool
 	step_size: float
 	position_start: vectors.Vector
 	position: vectors.Vector
@@ -30,6 +32,8 @@ class VectorPathing:
 	sample_count: int
 	x: RealList
 	y: RealList
+	plot_path: list[lines.Line2D]
+
 
 	def __init__(
 		self,
@@ -42,6 +46,7 @@ class VectorPathing:
 		Instantiate a pather `VectorPathing` in a `VectorField`.
 		"""
 		self.field = field
+		self.ready = False
 		self.step_size = step_size
 		self.position_start = start_position.clone()
 		self.position = self.position_start.clone()
@@ -49,6 +54,9 @@ class VectorPathing:
 		self.sample_count = sample_count
 		self.x = numpy.zeros((self.sample_count,), dtype=Real)
 		self.y = numpy.zeros((self.sample_count,), dtype=Real)
+		self.plot_path = []
+
+		return
 
 	def reset(self) -> None:
 		"""
@@ -62,6 +70,8 @@ class VectorPathing:
 		self.step_counter = 0
 		self.x = numpy.zeros((self.sample_count,), dtype=Real)
 		self.y = numpy.zeros((self.sample_count,), dtype=Real)
+
+		return
 
 	def step(self) -> vectors.Vector:
 		"""
@@ -91,11 +101,17 @@ Reached step limit ({self.step_counter}/ {self.sample_count} - 1)")
 		"""
 		while self.step_counter < self.sample_count:
 			self.step()
+		self.ready = True
+
+		return
 
 	def plot(self) -> None:
 		"""
 		Plot `VectorPathing` path to the `field` axes.
 		"""
-		self.field.axes.plot(self.x, self.y, color="blue")
-		self.field.axes.scatter(self.position_start.x, self.position_start.y, c="red")
-		self.field.axes.scatter(self.x[-1], self.y[-1], c="green")
+		if self.ready:
+			self.plot_path: list[lines.Line2D] = self.field.axes.plot(self.x, self.y, color="blue")
+			self.field.axes.scatter(self.position_start.x, self.position_start.y, c="red")
+			self.field.axes.scatter(self.x[-1], self.y[-1], c="green")
+	
+		return
