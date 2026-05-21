@@ -12,11 +12,13 @@ def main() -> None:
 	"""
 	Differentiation main entry point.
 	"""
-	run_euler1()
+	#run_euler1()
 
-	run_vectors1()
+	# run_vectors1()
 
-	run_vectors2()
+	# run_vectors2()
+
+	run_lotka_volterra()
 
 	show()
 
@@ -53,7 +55,7 @@ def run_vectors1() -> None:
 	del v1
 
 def run_vectors2() -> None:
-	print("(?) run_vectors1() Loading `v2`.")
+	print("(?) run_vectors2() Loading `v2`.")
 	v2 = vector_field.VectorField(
 		name="2.", 
 		a=lambda x, y: y * x,
@@ -67,5 +69,27 @@ def run_vectors2() -> None:
 	v2.plot()
 
 	del v2
+
+def run_lotka_volterra() -> None:
+	a: float = 3.0
+	b: float = 0.1
+	c: float = 3.0
+	d: float = 3.3
+
+	print("(?) run_vectors2() Loading `v2`.")
+	v2 = vector_field.VectorField(
+		name="2.", 
+		a=lambda x, y: x * (a  - b * y),
+		b=lambda x, y: y * (d * x - c),
+		attenuation=ln1pr,
+		sample_position=vectors.Vector(-10.0, -10.0),
+		sample_size=vectors.Vector(20.0, 20.0),
+		sample_step=vectors.Vector(0.5, 0.5)
+	)
+	v2.complete()
+	v2.plot()
+
+	del v2
+
 
 main()

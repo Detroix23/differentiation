@@ -8,9 +8,30 @@ Project-URL: Repository, https://github.com/Detroix23/
 Classifier: Programming Language :: Python :: 3
 Classifier: Operating System :: OS Independent
 Classifier: Natural Language :: English
-Requires-Python: >=3.14
+Requires-Python: >=3.11
 Description-Content-Type: text/markdown
 License-File: LICENSE.md
 Requires-Dist: numpy
 Requires-Dist: matplotlib
 Dynamic: license-file
+
+# Differentiation.
+Approximate differential equations results by graphing:
+- Euler's method;
+- vector field.
+
+Using `python`: `matplotlib` & `numpy`.
+
+## Examples.
+Euler's approximations:
+- Logistic equation 
+$$x' = x (1.0 - x)$$
+![Logistic 1](./docs/Euler_Logistic1.png)
+
+Vector field:
+- Prey-predator 
+$$ 
+x' = (1.0 - y) * x + 2.0 \newline
+y' = y * (x - 1.0) - 2.0
+$$
+![Preys-predator 1](docs/VectorField_Spiral1.png)

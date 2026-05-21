@@ -1,6 +1,6 @@
 # Virual environement
-/venv
-/.venv
+/.venv*
+
 
 # Python
 *.pyc

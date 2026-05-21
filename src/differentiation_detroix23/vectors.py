@@ -4,7 +4,7 @@
 """
 
 import math
-from typing import Self
+from typing import Self, Union
 
 class Vector:
 	"""
@@ -26,7 +26,7 @@ class Vector:
 	def __repr__(self) -> str:
 		return f"Vector(x={self.x}, y={self.y})"
 
-	def __mul__(self, other: object) -> Vector:
+	def __mul__(self, other: object) -> 'Vector':
 		if isinstance(other, float) or isinstance(other, int):
 			return Vector(self.x * other, self.y * other)
 		else:
@@ -38,7 +38,7 @@ class Vector:
 		"""
 		return Vector(self.x, self.y)
 
-	def add(self, value: 'float | int | Vector') -> Self:
+	def add(self, value: Union[float, int, 'Vector']) -> Self:
 		"""
 		Add to it`self` the real or `Vector` `value`. Return `Self` for chaining.
 		"""

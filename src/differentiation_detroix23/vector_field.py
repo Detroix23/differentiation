@@ -39,7 +39,7 @@ class VectorField:
 	"""`y` size of each vector."""
 	pather: vector_pathing.VectorPathing
 	figures: figure.Figure
-	axes: axes.Axes
+	axes: 'axes.Axes'
 	connection_mouse_id: int
 
 	def __init__(
@@ -82,12 +82,15 @@ class VectorField:
 		self.axes.autoscale(False)
 
 		self.connection_mouse_id = self.figures.canvas.mpl_connect('button_press_event', self.on_click)
+		
+		return
 
 	def __del__(self) -> None:
 		"""
 		On drop actions.
 		"""
 		self.figures.canvas.mpl_disconnect(self.connection_mouse_id)
+		return
 
 	def on_click(self, event: backend_bases.Event) -> None:
 		"""
@@ -104,19 +107,6 @@ class VectorField:
 		except:
 			button = 0
 			position = None
-
-		'''
-		print(f"""
-Event:
-x: {type(event.x)} = {event.x}	
-y: {type(event.y)} = {event.y}	
-xdata: {type(event.xdata)} = {event.xdata}	
-ydata: {type(event.ydata)} = {event.ydata}	
-ydata: {type(position_x)} = {position_x}	
-ydata: {type(position_y)} = {position_y}	
-button={event.button}	
-""")
-		'''
 
 		if (
 			position is not None 
@@ -201,4 +191,5 @@ f, position={self.sample_position}, size={self.sample_size}, step={self.sample_s
 		"""
 		self.axes.set_xbound(self.sample_position.x, self.sample_position.x + self.sample_size.x)
 		self.axes.set_ybound(self.sample_position.y, self.sample_position.y + self.sample_size.y)
-	
+
+		return

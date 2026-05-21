@@ -1,12 +1,12 @@
 [project]
 name = "differentiation_detroix23"
-version = "0.0.1"
+version = "0.1.0"
 description = "Graph differential equation solutions and approximations."
 authors = [
     { name="Detroix23", email="detroix23@gmail.com" }
 ]
 readme = "README.md"
-requires-python = ">=3.14"
+requires-python = ">=3.11"
 classifiers = [
     "Programming Language :: Python :: 3",
     "Operating System :: OS Independent",
