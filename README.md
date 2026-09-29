@@ -13,8 +13,8 @@ $$x' = x (1.0 - x)$$
 
 Vector field:
 - Prey-predator 
-$$ \begin{cases}
+$$\begin{cases}
 x' = (1.0 - y) * x + 2.0 \\
 y' = y * (x - 1.0) - 2.0 \\
-\end{cases} $$
+\end{cases}$$
 ![Preys-predator 1](docs/VectorField_Spiral1.png)
