@@ -13,8 +13,5 @@ $$x' = x (1.0 - x)$$
 
 Vector field:
 - Prey-predator 
-$$
-x' = (1.0 - y) * x + 2.0 \land 
-y' = y * (x - 1.0) - 2.0 
-$$
+$$x' = (1.0 - y) * x + 2.0 \land y' = y * (x - 1.0) - 2.0$$
 ![Preys-predator 1](docs/VectorField_Spiral1.png)
